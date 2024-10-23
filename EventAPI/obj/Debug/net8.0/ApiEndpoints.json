@@ -8,14 +8,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "countryCode",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "city",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "eventSearch",
+        "Type": "EventAPI.Core.Data.DTO.EventSearch",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -45,6 +40,22 @@
       },
       {
         "Name": "password",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EventsController",
+    "Method": "PostYourEvent",
+    "RelativePath": "api/events/PostEvent",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "EventID",
         "Type": "System.String",
         "IsRequired": false
       }

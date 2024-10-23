@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Drawing;
+using Namotion.Reflection;
 
 namespace EventAPI.Core.Services
 {
@@ -21,6 +23,7 @@ namespace EventAPI.Core.Services
         private readonly string _eventTicketMasterToken;
         private IConfiguration _configuration;
         private readonly ILogger<EventTicketMasterService> _logger;
+        private string DefaultNoOfrecords;
         public EventTicketMasterService(HttpClient httpClient, IConfiguration configuration, ILogger<EventTicketMasterService> logger)
 
         {
@@ -29,15 +32,16 @@ namespace EventAPI.Core.Services
             _eventTicketMasterUrl = configuration.GetRequiredSection("TicketMaster")["Url"];
             _eventTicketMasterToken = configuration.GetRequiredSection("TicketMaster")["APIKey"];
             _logger = logger;
+            DefaultNoOfrecords= _configuration.GetSection("DefaultValues")["NoOfRecords"].ToString();
         }
-        public async Task<List<EventEntity>> GetEvents(string countryCode, string cityName)
+        public async Task<List<EventEntity>> GetEvents(EventSearch eventSearch)
         {
+           
             var result = new List<EventEntity>();
             var query = string.Empty;
-            if (!string.IsNullOrEmpty(countryCode))
-                query += "&countryCode=" + countryCode;
-            if (!string.IsNullOrEmpty(cityName))
-                query += "&city=" + cityName;
+            query = string.Join("", eventSearch.searches.Select(a => string.Concat("&",a.Type, "=", a.Value)));
+            if(eventSearch.Size!="All")
+            query += "&Size=" + (string.IsNullOrEmpty(eventSearch.Size) ? eventSearch.Size : DefaultNoOfrecords);
 
             var requestUrl = $"{_eventTicketMasterUrl}events.json?apikey={_eventTicketMasterToken}" + query;
             var response = await _httpClient.GetAsync(requestUrl);
@@ -53,17 +57,18 @@ namespace EventAPI.Core.Services
                 var events = ticketmasterEvents._embedded.events;
                 result = events.Select(e => new EventEntity
                 {
+                    Id=Guid.NewGuid().ToString(),
                     Name = e.name,
                     Date = e.dates.start.dateTime,
                     Type = e.classifications[0].segment.name,
+                    Url=e.url,
                     Source = "Ticketmaster",
                     Address = e.venues != null && e.venues.Count > 0 ? string.Concat(e.venues[0].address.line1, ",", e.venues[0].city.name, e.venues[0].country.name, e.venues[0].postalCode) : string.Empty
-
                 }).ToList();
             }
             else
             {
-                _logger.Log(LogLevel.Error, "Error accured fetching Event data from Event Service{SearchCriteria}",);
+                _logger.Log(LogLevel.Error, "Error accured fetching Event data from Event Service{SearchCriteria}", eventSearch);
 
                 response.EnsureSuccessStatusCode();
             }

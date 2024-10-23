@@ -1,10 +1,17 @@
 ﻿namespace EventAPI.Core.Data.DTO
 {
     public class EventSearch
-    {
-        public int Id { get; set; }
-        
-        public int? Page { get; set; }
-        public int? Size { get; set; }
+    { 
+        public EventSearch()
+        {
+            searches = new List<Search>();
+        }
+        public List<Search> searches { get; set; }
+        public string Size { get; set; }
+    }
+    public class Search { 
+    public string Type {  get; set; }
+    public string Value { get; set; }
+
     }
 }

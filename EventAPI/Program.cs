@@ -29,6 +29,7 @@ builder.Services.AddControllers().AddJsonOptions(SetJsonOptions);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<IAyrshare, AyrshareService>();
 builder.Services.AddTransient<IEventTicketMasterService, EventTicketMasterService>();
 builder.Services.AddTransient<IEventService, EventService>();
 builder.Services.AddSecurity(builder.Configuration);

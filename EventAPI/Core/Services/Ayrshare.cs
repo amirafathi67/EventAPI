@@ -22,26 +22,44 @@ namespace EventAPI.Core.Services
         }
         public async Task<string> PostYourEvent(string postDescription)
         {
-
-            _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer "+ _ayrshareToken);
-
-            var data = new
-            {   post = postDescription,
-                platforms = new[] { "twitter", "facebook", "instagram", "linkedin", "pinterest" },
-            };
-
-            var json = JsonConvert.SerializeObject(data);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync(_ayrshareUrl, content);
-            if (response==null || !response.IsSuccessStatusCode)
+            try
             {
-                _logger.LogError("Error getting Event from Ayshare service: {responseString}", response);
+                _httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + _ayrshareToken);
+
+                var data = new
+                {
+                    post = postDescription,
+                    //you can share with all this option just need to link to your account
+                    // { "twitter", "facebook", "instagram", "linkedin", "pinterest" }
+                    platforms = new[] {  "linkedin" },
+                };
+
+                var json = JsonConvert.SerializeObject(data);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync(_ayrshareUrl, content);
+                if (response == null)
+                {
+                    return null;
+                }
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Error getting Event from Ayshare service: {responseString}", response);
+
+                    return response.StatusCode.ToString();
+                }
+                var result = await response.Content.ReadAsStringAsync();
+
+                return response.StatusCode.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error getting PostYourEvent Ayshare service: {Message}", ex.Message);
+
                 return null;
             }
-            var result = await response.Content.ReadAsStringAsync();
-
-            return response.StatusCode.ToString();
+        
 
         }
     }

@@ -10,6 +10,7 @@ using EventAPI.Core.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 
 namespace EventAPI.Core.Services
@@ -25,7 +26,7 @@ namespace EventAPI.Core.Services
         private IAyrshare _ayrshareService;
         private readonly IConfiguration _configuration;
         private readonly ILogger<EventService> _logger;
-        public EventService(IEventTicketMasterService eventTicketMasterService, IMemoryCache cache,
+        public EventService(IEventTicketMasterService eventTicketMasterService,IAyrshare _ayrshareServic, IMemoryCache cache,
             IConfiguration configuration,
             IAyrshare ayrshareService, ILogger<EventService> logger)
 
@@ -35,6 +36,7 @@ namespace EventAPI.Core.Services
             _configuration = configuration;
             _ayrshareService = ayrshareService;
             _logger = logger;
+            LoadData();
         }
         #region Data from MasterTicket
         public async Task FetchAndStoreEventsAsync(EventSearch eventSearch)
@@ -45,20 +47,21 @@ namespace EventAPI.Core.Services
             if (!File.Exists(filePath + "events.json"))
                 File.Create(filePath + "events.json");
            
-            var api1Events = await _eventTicketMasterService.GetEvents(eventSearch.CountryCode, eventSearch.City);
+            var api1Events = await _eventTicketMasterService.GetEvents(eventSearch);
             _eventList.AddRange(api1Events);
             
             string json = JsonSerializer.Serialize(_eventList);
             File.WriteAllText(filePath+"events.json", json);
             if(_eventList != null && _eventList.Count>0)
             {
-                var allevent = _eventList.Select(a => new Data.DTO.Event()
+                var allevent = _eventList.Select(e => new Data.DTO.Event()
                 {
-                    Name = a.Name,
-                    Type = a.Type,
-                    CountryCode = a.CountryCode,
-                    Address = a.Address,
-                    Date = a.Date
+                    Id=e.Id,
+                    Name = e.Name,
+                    Type = e.Type,
+                 
+                    url=e.Url,
+                    Date = e.Date
 
                 });
                 _cache.Set(CacheKey, allevent, TimeSpan.FromMinutes(30));
@@ -79,59 +82,82 @@ namespace EventAPI.Core.Services
             {
                 return cachedEvents;
             }
+            LoadData();
+            
+            return _eventList.Select(e => new Data.DTO.Event()
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Type = e.Type,
+                Date = e.Date
+
+            });
+        }
+        private void LoadData()
+        {
+            if (_cache.TryGetValue(CacheKey, out List<Data.DTO.Event> cachedEvents))
+            {
+                 return;
+            }
             string jsonString = File.ReadAllText(@"Core\Data\DB\events.json");
 
             // Deserialize the JSON string into a list of Event objects
             List<EventEntity> allevent = JsonSerializer.Deserialize<List<EventEntity>>(jsonString);
             _eventList.AddRange(allevent);
-          return _eventList.Select(e => new Data.DTO.Event()
+            cachedEvents= _eventList.Select(e => new Data.DTO.Event()
             {
                 Id = e.Id,
                 Name = e.Name,
                 Type = e.Type,
-                CountryCode = e.CountryCode,
                 Address = e.Address,
+                url = e.Url,
                 Date = e.Date
 
-            });
+            }).ToList();
+            _cache.Set(CacheKey, cachedEvents, TimeSpan.FromMinutes(30));
+
         }
         public async Task<Data.DTO.Event> GetEvent(string eventId)
         {
-            var eventDTO= new Data.DTO.Event();
+            var eventDTO = new Data.DTO.Event();
+            if (_cache.TryGetValue(CacheKey, out List<Data.DTO.Event> cachedEvents) && cachedEvents!=null)
+            {
+                return cachedEvents.FirstOrDefault(e => e.Id == eventId);
+            }
             if (_eventList != null)
             {
                 eventDTO = _eventList.Where(e => e.Id == eventId).Select(e => new Data.DTO.Event()
                 {
                     Name = e.Name,
                     Type = e.Type,
-                    CountryCode = e.CountryCode,
-                    Address = e.Address,
+                   
                     Date = e.Date,
-                    Description = e.Description,
-                    City = e.City
+                   
                 }).FirstOrDefault();
             }
             return eventDTO;
         }
             #endregion
             #region Ayshare
-            public async Task PostEvent(string EventID)
+            public async Task<string> PostYourEvent(string EventID)
         {
 
-            var Selectedevent = _eventList.FirstOrDefault(e => e.Id == EventID);
+            var Selectedevent = GetEvent(EventID).Result;
 
-
+            string result = string.Empty;
             if (Selectedevent != null)
             {
                 StringBuilder description = new StringBuilder();
-                description.Append(Selectedevent?.Name);
-                description.Append(Selectedevent?.Description);
-                description.Append(Selectedevent?.Address);
+                description.Append("Name:"+Selectedevent?.Name);
+                description.Append(Environment.NewLine);
+                description.Append("Type"+Selectedevent?.Type);
+                description.Append(Environment.NewLine);
+                description.Append("Address:"+Selectedevent?.Address);
                 description.Append(Selectedevent?.Date.ToString("dd-mm-yyyy"));
-                string response = _ayrshareService.PostYourEvent(description.ToString()).Result;
-                return response;
+                return await _ayrshareService.PostYourEvent(description.ToString());
+               
             }
-            return null;
+            return result;
 
         }
             #endregion

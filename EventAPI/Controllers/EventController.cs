@@ -1,15 +1,11 @@
 ﻿// Controllers/EventsController.cs
 using EventAPI.Core.Data.DTO;
 using EventAPI.Core.Interfaces;
-using EventAPI.Core.Interfaces;
+
 using EventAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using YamlDotNet.Core.Tokens;
+
 [Authorize]
 [ApiController]
 [Route("api/events")]
@@ -84,14 +80,31 @@ public class EventsController : ControllerBase
     }
 
     [HttpPost]
-    [Route("FetchEvents")]
-    
+    [Route("FetchEvents")] 
     public async Task<IActionResult> FetchEvents([FromBody] EventSearch eventSearch)
     {
         try
         {
-            var result = await _eventService.FetchAndStoreEventsAsync(eventSearch);
+             await _eventService.FetchAndStoreEventsAsync(eventSearch);
             return Ok("Events fetched and stored successfully.");
+        }
+        catch (Exception ex)
+        {
+            const string message = "Error occured event.";
+            _logger.LogError(ex, message);
+            throw new Exception(message);
+        }
+
+
+    }
+    [HttpPost]
+    [Route("PostEvent")]
+    public async Task<IActionResult> PostYourEvent(string EventID)
+    {
+        try
+        {
+            await _eventService.PostYourEvent(EventID);
+            return Ok("Events have been post successfully.");
         }
         catch (Exception ex)
         {
