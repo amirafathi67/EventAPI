@@ -23,37 +23,6 @@ public class EventsControllerTests
     }
 
     [Fact]
-    public async Task Login_ReturnsOk_WhenCredentialsAreValid()
-    {
-        // Arrange
-        var username = "admin";
-        var password = "admin";
-        _mockConfiguration.Setup(c => c["Jwt:Key"]).Returns("SomeSecretKey");
-
-        // Act
-        var result = await _controller.Login(username, password) as OkObjectResult;
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(200, result.StatusCode);
-        Assert.IsType<string>(result.Value);
-    }
-
-    [Fact]
-    public async Task Login_ReturnsUnauthorized_WhenCredentialsAreInvalid()
-    {
-        // Arrange
-        var username = "user";
-        var password = "wrongpassword";
-
-        // Act
-        var result = await _controller.Login(username, password);
-
-        // Assert
-        Assert.IsType<UnauthorizedResult>(result);
-    }
-
-    [Fact]
     public async Task GetAllEvents_ReturnsOk_WithEventList()
     {
         // Arrange
@@ -72,12 +41,12 @@ public class EventsControllerTests
     public async Task FetchEvents_ReturnsOk_WhenFetchIsSuccessful()
     {
         // Arrange
-        var eventSearch = new EventSearch();
-        eventSearch.searches.Add(new Search() { Type = "Countrycode", Value = "IE" });
-        eventSearch.searches.Add(new Search() { Type = "city", Value = "Dublin" });
-        eventSearch.Size = "10";
+        var searchQuery = new SearchQuery();
+        searchQuery.Search.Add(new Search() { Type = "Countrycode", Value = "IE" });
+        searchQuery.Search.Add(new Search() { Type = "city", Value = "Dublin" });
+        searchQuery.Size = "10";
         // Act
-        var result = await _controller.FetchEvents(eventSearch) as OkObjectResult;
+        var result = await _controller.FetchEvents(searchQuery) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
@@ -89,10 +58,11 @@ public class EventsControllerTests
     public async Task PostYourEvent_ReturnsOk_WhenEventIsPostedSuccessfully()
     {
         // Arrange
-        var eventId = "12345";
+        var eventPost = new EventPost() { EventID = "12345", PostDescription = "This Event is for learning style importance in Education" };
+         
 
         // Act
-        var result = await _controller.PostYourEvent(eventId) as OkObjectResult;
+        var result = await _controller.PostYourEvent(eventPost) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);

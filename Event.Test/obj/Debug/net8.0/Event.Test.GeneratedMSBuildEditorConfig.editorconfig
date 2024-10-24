@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Event.Test
-build_property.ProjectDir = /Users/amirafathi/Documents/Event/EventAPI/Event.Test/
+build_property.ProjectDir = C:\Code\training\EventAPI\EventAPI\Events\Event.Test\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
