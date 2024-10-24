@@ -34,14 +34,14 @@ namespace EventAPI.Core.Services
             _logger = logger;
             DefaultNoOfrecords= _configuration.GetSection("DefaultValues")["NoOfRecords"].ToString();
         }
-        public async Task<List<EventEntity>> GetEvents(EventSearch eventSearch)
+        public async Task<List<EventEntity>> GetEvents(SearchQuery searchQuery)
         {
            
             var result = new List<EventEntity>();
             var query = string.Empty;
-            query = string.Join("", eventSearch.searches.Select(a => string.Concat("&",a.Type, "=", a.Value)));
-            if(eventSearch.Size!="All")
-            query += "&Size=" + (string.IsNullOrEmpty(eventSearch.Size) ? eventSearch.Size : DefaultNoOfrecords);
+            query = string.Join("", searchQuery.Search.Select(a => string.Concat("&",a.Type, "=", a.Value)));
+            if(searchQuery.Size!="All")
+            query += "&size=" + (string.IsNullOrEmpty(searchQuery.Size) ? searchQuery.Size : DefaultNoOfrecords);
 
             var requestUrl = $"{_eventTicketMasterUrl}events.json?apikey={_eventTicketMasterToken}" + query;
             var response = await _httpClient.GetAsync(requestUrl);
@@ -68,11 +68,9 @@ namespace EventAPI.Core.Services
             }
             else
             {
-                _logger.Log(LogLevel.Error, "Error accured fetching Event data from Event Service{SearchCriteria}", eventSearch);
-
-                response.EnsureSuccessStatusCode();
+                _logger.Log(LogLevel.Error, "Error accured fetching Event data from Event Service{searchQuery}", searchQuery);
             }
-           
+       
             return result;
         }
 
@@ -81,7 +79,7 @@ namespace EventAPI.Core.Services
             // not implemented
             return new List<EventEntity>();
         }
-        public async Task<List<EventEntity>> GetVenues(string countryCode, string keyword)
+        public async Task<List<EventEntity>> GetVenues(SearchQuery searchQuery)
         { 
             // not impelmented 
             return new List<EventEntity>(); }

@@ -31,7 +31,7 @@ namespace EventAPI.Core.Services
                     post = postDescription,
                     //you can share with all this option just need to link to your account
                     // { "twitter", "facebook", "instagram", "linkedin", "pinterest" }
-                    platforms = new[] {  "linkedin" },
+                    platforms = new[] {"linkedin"},
                 };
 
                 var json = JsonConvert.SerializeObject(data);

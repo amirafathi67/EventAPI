@@ -1,4 +1,5 @@
-﻿using EventAPI.Core.Data.Entities;
+﻿using EventAPI.Core.Data.DTO;
+using EventAPI.Core.Data.Entities;
 
 namespace EventAPI.Core.Interfaces
 {

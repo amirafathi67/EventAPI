@@ -14,6 +14,5 @@ namespace EventAPI.Core.Data.DTO
         public string Address { get; set; }
         public string url { get; set; }
         public DateTime Date { get; set; }
-        public int? Size { get; set; }
     }
 }

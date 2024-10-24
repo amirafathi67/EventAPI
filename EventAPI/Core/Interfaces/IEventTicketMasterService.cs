@@ -11,9 +11,9 @@ namespace EventAPI.Core.Interfaces
 {
     public interface IEventTicketMasterService
     {
-        public Task<List<EventEntity>> GetEvents(EventSearch eventSearch);
+        public Task<List<EventEntity>> GetEvents(SearchQuery eventQuery);
         public Task<List<EventEntity>> GetAttraction(string cityName, string classificationName);
-        public Task<List<EventEntity>> GetVenues(string countryCode, string keyword);
+        public Task<List<EventEntity>> GetVenues(SearchQuery eventQuery);
 
     }
 }

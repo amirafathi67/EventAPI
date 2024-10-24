@@ -12,10 +12,8 @@ namespace EventAPI.Core.Interfaces
     // Services/IEventService.cs
     public interface IEventService
     {
-        public Task FetchAndStoreEventsAsync(EventSearch eventSearch); 
+        public Task FetchAndStoreEventsAsync(SearchQuery eventSearch); 
         public Task<IEnumerable<Data.DTO.Event>> GetAllEvents();
-        public Task<string> PostYourEvent(string postDescription);
-
+        public Task<string> PostYourEvent(EventPost eventPost);
     }
-
 }

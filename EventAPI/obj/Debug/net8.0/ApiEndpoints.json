@@ -9,7 +9,7 @@
     "Parameters": [
       {
         "Name": "eventSearch",
-        "Type": "EventAPI.Core.Data.DTO.EventSearch",
+        "Type": "EventAPI.Core.Data.DTO.SearchQuery",
         "IsRequired": true
       }
     ],
@@ -27,27 +27,6 @@
   },
   {
     "ContainingType": "EventsController",
-    "Method": "Login",
-    "RelativePath": "api/events/Login",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "username",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "password",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "EventsController",
     "Method": "PostYourEvent",
     "RelativePath": "api/events/PostEvent",
     "HttpMethod": "POST",
@@ -55,9 +34,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "EventID",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "eventPost",
+        "Type": "EventAPI.Core.Data.DTO.EventPost",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

@@ -14,42 +14,22 @@ public class EventsController : ControllerBase
     private readonly IEventService _eventService;
     private readonly ILogger<EventsController> _logger;
     private readonly IConfiguration _configuration;
-    public EventsController(IEventService eventService, ILogger<EventsController> logger,IConfiguration configuration)
+    public EventsController(IEventService eventService, ILogger<EventsController> logger, IConfiguration configuration)
     {
         _configuration = configuration;
         _eventService = eventService;
         _logger = logger;
-       
-    }
-    [AllowAnonymous]
-    [Route("Login")]
-    [HttpPost]
-    public async Task<IActionResult> Login(string username, string password)
-    {
-        var tokenGenerator = new TokenGenerator(_configuration);
-        var result = string.Empty;
-        if (string.IsNullOrEmpty(username))
-        {
-            _logger.LogError("username must not be empty.");
-            throw new ArgumentException("username must not be empty.");
-        }
 
-        if (string.IsNullOrEmpty(password))
-        {
-            _logger.LogError("password must not be empty.");
-            throw new ArgumentException("password must not be empty.");
-        }
+    }
+
+    [HttpPost]
+    [Route("FetchEvents")]
+    public async Task<IActionResult> FetchEvents([FromBody] SearchQuery eventSearch)
+    {
         try
         {
-            if (username == "admin" && password == "admin")
-            {
-                result = tokenGenerator.CreateToken();
-                return Ok(result);
-            }
-            else
-            {
-                return Unauthorized();
-            }
+            await _eventService.FetchAndStoreEventsAsync(eventSearch);
+            return Ok("Events fetched and stored successfully.");
         }
         catch (Exception ex)
         {
@@ -57,14 +37,12 @@ public class EventsController : ControllerBase
             _logger.LogError(ex, message);
             throw new Exception(message);
         }
-
     }
-    
+
     [HttpGet]
     [Route("GetAllEvents")]
     public async Task<IActionResult> GetAllEvents()
     {
-
         try
         {
             var events = await _eventService.GetAllEvents();
@@ -76,34 +54,15 @@ public class EventsController : ControllerBase
             _logger.LogError(ex, message);
             throw new Exception(message);
         }
-
     }
 
-    [HttpPost]
-    [Route("FetchEvents")] 
-    public async Task<IActionResult> FetchEvents([FromBody] EventSearch eventSearch)
-    {
-        try
-        {
-             await _eventService.FetchAndStoreEventsAsync(eventSearch);
-            return Ok("Events fetched and stored successfully.");
-        }
-        catch (Exception ex)
-        {
-            const string message = "Error occured event.";
-            _logger.LogError(ex, message);
-            throw new Exception(message);
-        }
-
-
-    }
     [HttpPost]
     [Route("PostEvent")]
-    public async Task<IActionResult> PostYourEvent(string EventID)
+    public async Task<IActionResult> PostYourEvent(EventPost eventPost)
     {
         try
         {
-            await _eventService.PostYourEvent(EventID);
+            await _eventService.PostYourEvent(eventPost);
             return Ok("Events have been post successfully.");
         }
         catch (Exception ex)
@@ -112,8 +71,6 @@ public class EventsController : ControllerBase
             _logger.LogError(ex, message);
             throw new Exception(message);
         }
-
-
     }
 }
 
