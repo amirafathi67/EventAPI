@@ -1,30 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Code\\training\\EventAPI\\EventAPI\\Events\\EventAPI\\EventAPI.csproj": {}
+    "/Users/amirafathi/Documents/Event/EventAPI/EventAPI/EventAPI.csproj": {}
   },
   "projects": {
-    "C:\\Code\\training\\EventAPI\\EventAPI\\Events\\EventAPI\\EventAPI.csproj": {
+    "/Users/amirafathi/Documents/Event/EventAPI/EventAPI/EventAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Code\\training\\EventAPI\\EventAPI\\Events\\EventAPI\\EventAPI.csproj",
+        "projectUniqueName": "/Users/amirafathi/Documents/Event/EventAPI/EventAPI/EventAPI.csproj",
         "projectName": "EventAPI",
-        "projectPath": "C:\\Code\\training\\EventAPI\\EventAPI\\Events\\EventAPI\\EventAPI.csproj",
-        "packagesPath": "C:\\Users\\AmiraHaridi\\.nuget\\packages\\",
-        "outputPath": "C:\\Code\\training\\EventAPI\\EventAPI\\Events\\EventAPI\\obj\\",
+        "projectPath": "/Users/amirafathi/Documents/Event/EventAPI/EventAPI/EventAPI.csproj",
+        "packagesPath": "/Users/amirafathi/.nuget/packages/",
+        "outputPath": "/Users/amirafathi/Documents/Event/EventAPI/EventAPI/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\AmiraHaridi\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/amirafathi/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://pkgs.dev.azure.com/kneatorg/_packaging/kneat-packages/nuget/v3/index.json": {}
+          "/usr/local/share/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
@@ -119,7 +116,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
