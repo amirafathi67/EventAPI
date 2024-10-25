@@ -1,7 +1,11 @@
 # Events
 
 Event API that fetches events from Third-party integrated with 2 API 
-providing the generated Token for easy use 
+
+* secure using JWT , generated Token will be called and provided in the swagger UI header 
+* Integration with Ticket Master third-party API to get event list upon specific search criteria
+* Integrated with Ayshare to post event on social media (currently configured linked in only)
+* using local storage as json file 
 
 ## Ticket Master API  (Event)
 
