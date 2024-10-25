@@ -9,7 +9,7 @@ Event API that fetches events from Third-party integrated with 2 API
 
 ## Ticket Master API  (Event)
 
- * Methods:
+ * Details:
   1.  FetchEvents(SearchQuery eventSearch) depends on different types of search criteria
   2.  Save the result in Local storage (Events.json) file 
 
@@ -32,14 +32,14 @@ Event API that fetches events from Third-party integrated with 2 API
 ```
 ## GetAllEvent
 
- * Methods:
+ * Details:
   1.  Retrieving the Records from local storage (Events.json)
   2.  Saving in EventEntity Model
 
 
 ## Ayshare API  (Social Media)
 
- * Methods:
+ * Details:
   1.  PostEvent will take the EventId, and description that you want to post it on social media currently I integrated with linkedIn only
   2.  Pass the generated eventID from the local storage (events.json)
 
